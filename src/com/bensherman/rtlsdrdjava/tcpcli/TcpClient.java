@@ -57,29 +57,29 @@ public class TcpClient implements Runnable
     /**
      * Socket used to interact w/ the server
      */
-    private final Socket tcpSocket;
+    private Socket tcpSocket;
 
     /**
      * The instance of TcpSocketWriter associated with this client, which is used to
      * handle socket writes.
      */
-    private final TcpSocketWriter socketWriter;
+    private TcpSocketWriter socketWriter;
 
     /**
      * The instance of TcpSocketReader associated with this client, which is used to
      * handle socket reads.
      */
-    private final TcpSocketReader socketReader;
+    private TcpSocketReader socketReader;
 
     /**
      * The thread which the socketWriter instance is running in.
      */
-    private final Thread socketWriterThread;
+    private Thread socketWriterThread;
 
     /**
      * The thread which the socketReader instance is running in
      */
-    private final Thread socketReaderThread;
+    private Thread socketReaderThread;
 
     /**
      * When a client writes a message to the server, once the response has been
@@ -94,6 +94,9 @@ public class TcpClient implements Runnable
      * interrupted, the thread will die.
      */
     private boolean keepAlive;
+
+    private final String hostname;
+    private final int portNum;
 
     /**
      * Instantiates a new TcpClient
@@ -111,14 +114,20 @@ public class TcpClient implements Runnable
      */
     public TcpClient(final String hostname, final int portNum) throws UnknownHostException, IOException
     {
+        this.hostname = hostname;
+        this.portNum = portNum;
+        completedMsgQueue = new LinkedBlockingQueue<>();
+        keepAlive = true;
+    }
+
+    private void initMembers() throws IOException
+    {
         tcpSocket = new Socket(hostname, portNum);
         tcpSocket.setTcpNoDelay(true);
         socketWriter = new TcpSocketWriter(tcpSocket, this);
         socketReader = new TcpSocketReader(tcpSocket, this);
         socketWriterThread = new Thread(socketWriter, SOCKET_WRITER_THREAD_NAME);
         socketReaderThread = new Thread(socketReader, SOCKET_READER_THREAD_NAME);
-        completedMsgQueue = new LinkedBlockingQueue<>();
-        keepAlive = true;
     }
 
     /**
@@ -128,6 +137,15 @@ public class TcpClient implements Runnable
     @Override
     public void run()
     {
+        try
+        {
+            initMembers();
+        }
+        catch (IOException exception)
+        {
+            return;
+//            Log.e("ERROR CONNECTING TO SOCKET");
+        }
         logMsg("entering run()");
         socketWriterThread.start();
         socketReaderThread.start();

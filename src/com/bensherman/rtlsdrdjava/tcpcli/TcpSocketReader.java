@@ -137,6 +137,9 @@ class TcpSocketReader implements Runnable
                     {
                         logMsg("Received ERROR message");
                     }
+
+                    // FOR TESTING
+                    System.out.println(completedMsg);
                 }
                 catch (final IOException exception)
                 {
@@ -226,6 +229,7 @@ class TcpSocketReader implements Runnable
             // to deal with receiving new params.
             else if (readFromSocket.startsWith(UPDATE_AVAILABLE_STRING_PREFIX))
             {
+                //update available 
                 logMsg("IMPLEMENT UPDATE_AVAILABLE HANDLER!!! Received: " + readFromSocket);
             }
 
