@@ -100,7 +100,7 @@ public class TcpClient implements Runnable
 
     /**
      * Instantiates a new TcpClient
-     * 
+     *
      * @param hostname
      *            The hostname of the server (can be an IP or textual name to be
      *            resolved w/ DNS)
@@ -171,7 +171,7 @@ public class TcpClient implements Runnable
     /**
      * Logs/outputs a message. Replace the System.out.println() with a logger if
      * desired. The message format is "<ThreadName>: msg"
-     * 
+     *
      * @param msg
      *            The msg to log
      */
@@ -182,7 +182,7 @@ public class TcpClient implements Runnable
 
     /**
      * Writes a message to the server. This happens asynchronously.
-     * 
+     *
      * @param msg
      *            The message to send to the server
      */
@@ -194,7 +194,7 @@ public class TcpClient implements Runnable
     /**
      * Requests that the socketWriter thread die. The join() call will wait
      * THREAD_JOIN_WAIT_TIME_MS.
-     * 
+     *
      * @throws InterruptedException
      *             If this thread is interrupted when calling join()
      */
@@ -218,7 +218,7 @@ public class TcpClient implements Runnable
     /**
      * Requests that the socketReader thread die. The join() call will wait
      * THREAD_JOIN_WAIT_TIME_MS.
-     * 
+     *
      * @throws InterruptedException
      *             If this thread is interrupted when calling join()
      */
@@ -244,7 +244,7 @@ public class TcpClient implements Runnable
      * threads. The socket is also closed. This TcpClient should NOT be used after
      * executing this function. The socket is closed in order to wake the reader
      * thread.
-     * 
+     *
      * @throws IOException
      *             If an IO error occurs when closing tcpSocket
      * @throws InterruptedException
@@ -270,7 +270,7 @@ public class TcpClient implements Runnable
     /**
      * Add a completed Message instance (i.e. its response fields are set) to the
      * completedMsgQueue.
-     * 
+     *
      * @param completedMsg
      *            A completed Message to add to completedMsgQueue
      */
@@ -283,7 +283,7 @@ public class TcpClient implements Runnable
      * THIS CALL BLOCKS on completedMsgQueue. That is, if this function is called
      * when completedMsgQueue is empty, the calling thread will wait until a Message
      * becomes available.
-     * 
+     *
      * @return The head of the completedMsgQueue queue, which is the oldest
      *         completed Message which has not been pulled from the queue.
      * @throws InterruptedException
@@ -298,7 +298,7 @@ public class TcpClient implements Runnable
     /**
      * Returns this TcpClient's socketReader member. Intended to be used only by the
      * socketWriter instance.
-     * 
+     *
      * @return This TcpClient's socketReader member.
      */
     TcpSocketReader getTcpSocketReader()
@@ -316,7 +316,7 @@ public class TcpClient implements Runnable
     }
 
     /**
-     * 
+     *
      * @return The default name for the thread executing this class's run() method.
      */
     public static String getDefaultThreadName()
