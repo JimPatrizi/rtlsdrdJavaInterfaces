@@ -21,7 +21,6 @@ public class ExampleUsage
             // Getter
             "CMDS_IN_USE" };
 
-<<<<<<< HEAD
 //    public static void main(final String[] args) throws Exception
 //    {
 //
