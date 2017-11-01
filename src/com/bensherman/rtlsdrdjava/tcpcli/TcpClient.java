@@ -112,7 +112,7 @@ public class TcpClient implements Runnable
      *             If there was an error creating the socket, which can also occur
      *             during the instantiation of socketWriter and socketReader
      */
-    public TcpClient(final String hostname, final int portNum) throws UnknownHostException, IOException
+    public TcpClient(final String hostname, final int portNum) throws IOException
     {
         this.hostname = hostname;
         this.portNum = portNum;
