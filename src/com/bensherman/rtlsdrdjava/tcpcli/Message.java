@@ -15,7 +15,7 @@ public class Message
      */
     public enum ResponseType
     {
-        OK, ERROR, UPDATE_AVAILABLE;
+        OK, ERROR, UPDATE_AVAILABLE
     }
 
     /**
