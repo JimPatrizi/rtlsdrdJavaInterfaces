@@ -14,14 +14,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 class TcpSocketWriter implements Runnable
 {
-
-    /**
-     * New messages to be sent to the server are placed in this queue. This class's
-     * thread will pend on this queue when empty, until a new message is placed into
-     * it. The messages in this queue should only have their outboundMsg field set.
-     */
-    private final BlockingQueue<Message> sendMsgQueue;
-
     /**
      * When set to false, if this thread is interrupted, it will die.
      */
@@ -53,7 +45,6 @@ class TcpSocketWriter implements Runnable
     {
         tcpSocketWriter = new PrintWriter(socketToWriteTo.getOutputStream(), true);
         keepAlive = true;
-        sendMsgQueue = new LinkedBlockingQueue<>();
         this.tcpClient = tcpClient;
     }
 
@@ -77,7 +68,7 @@ class TcpSocketWriter implements Runnable
                 {
                     // Wait for a new message to be submitted, and a new msg
                     // has been submitted, send it.
-                    write(sendMsgQueue.take());
+                    write(tcpClient.takeMsgFromSendMsgQueue());
                 }
                 catch (final InterruptedException exception)
                 {
@@ -104,18 +95,6 @@ class TcpSocketWriter implements Runnable
         tcpClient.getTcpSocketReader().addToWaitingForResponseQueue(msg);
         tcpSocketWriter.println(msg.getOutboundMsg());
         tcpSocketWriter.flush();
-    }
-
-    /**
-     * Creates a Message based off of the parameter, and adds the new Message to
-     * sendMsgQueue
-     *
-     * @param msg
-     *            The message to be sent
-     */
-    void enqueueMessage(final String msg)
-    {
-        sendMsgQueue.add(new Message(msg));
     }
 
     /**

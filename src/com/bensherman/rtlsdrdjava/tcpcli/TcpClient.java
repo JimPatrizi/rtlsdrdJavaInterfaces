@@ -23,6 +23,8 @@ import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import jimpatrizi.com.netrtl.MainActivity;
+
 public class TcpClient implements Runnable
 {
 
@@ -90,6 +92,13 @@ public class TcpClient implements Runnable
     private final BlockingQueue<Message> completedMsgQueue;
 
     /**
+     * New messages to be sent to the server are placed in this queue. The TcpSocketWriter instance's
+     * thread will pend on this queue when empty, until a new message is placed into
+     * it. The messages in this queue should only have their outboundMsg field set.
+     */
+    private final BlockingQueue<Message> sendMsgQueue;
+
+    /**
      * When this is set to false, if the thread containing this client instance is
      * interrupted, the thread will die.
      */
@@ -117,6 +126,7 @@ public class TcpClient implements Runnable
         this.hostname = hostname;
         this.portNum = portNum;
         completedMsgQueue = new LinkedBlockingQueue<>();
+        sendMsgQueue = new LinkedBlockingQueue<>();
         keepAlive = true;
     }
 
@@ -188,7 +198,13 @@ public class TcpClient implements Runnable
      */
     public void sendToServer(final String msg)
     {
-        socketWriter.enqueueMessage(msg);
+        try {
+            sendMsgQueue.add(new Message(msg));
+        }
+        catch(NullPointerException exception)
+        {
+            MainActivity.printToast("SendToServer() Exception: " + exception);
+        }
     }
 
     /**
@@ -322,5 +338,16 @@ public class TcpClient implements Runnable
     public static String getDefaultThreadName()
     {
         return TCP_CLIENT_DEFAULT_THREAD_NAME;
+    }
+
+    /**
+     * Calls take() on the send message queue, causing the calling thread to block.
+     * Take() will remove the head of the queue.
+     * @return The oldest untaken message in the queue.
+     * @throws InterruptedException If the take() operation was interrupted.
+     */
+    Message takeMsgFromSendMsgQueue() throws InterruptedException
+    {
+        return sendMsgQueue.take();
     }
 }

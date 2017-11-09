@@ -127,6 +127,7 @@ class TcpSocketReader implements Runnable
             {
                 try
                 {
+                    //TODO Try Catch for NullPointerException, just return and toast a msg
                     final Message completedMsg = getResponseFromSocket();
 
                     // This message has now been completed (received a response).
