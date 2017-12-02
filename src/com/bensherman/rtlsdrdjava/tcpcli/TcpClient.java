@@ -26,8 +26,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import jimpatrizi.com.netrtl.MainActivity;
 
-import static android.R.attr.port;
-
 public class TcpClient implements Runnable
 {
 
@@ -136,7 +134,7 @@ public class TcpClient implements Runnable
     private void initMembers() throws IOException
     {
         tcpSocket = new Socket();
-        tcpSocket.connect(new InetSocketAddress(hostname, port), 5000);
+        tcpSocket.connect(new InetSocketAddress(hostname, portNum), 5000);
         tcpSocket.setTcpNoDelay(true);
         socketWriter = new TcpSocketWriter(tcpSocket, this);
         socketReader = new TcpSocketReader(tcpSocket, this);
