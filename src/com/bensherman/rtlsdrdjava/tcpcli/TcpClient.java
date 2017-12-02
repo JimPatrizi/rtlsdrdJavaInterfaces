@@ -18,12 +18,16 @@
 package com.bensherman.rtlsdrdjava.tcpcli;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import jimpatrizi.com.netrtl.MainActivity;
+
+import static android.R.attr.host;
+import static android.R.attr.port;
 
 public class TcpClient implements Runnable
 {
@@ -132,7 +136,8 @@ public class TcpClient implements Runnable
 
     private void initMembers() throws IOException
     {
-        tcpSocket = new Socket(hostname, portNum);
+        tcpSocket = new Socket();
+        tcpSocket.connect(new InetSocketAddress(hostname, port), 5000);
         tcpSocket.setTcpNoDelay(true);
         socketWriter = new TcpSocketWriter(tcpSocket, this);
         socketReader = new TcpSocketReader(tcpSocket, this);
