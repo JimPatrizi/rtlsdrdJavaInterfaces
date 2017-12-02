@@ -26,7 +26,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import jimpatrizi.com.netrtl.MainActivity;
 
-import static android.R.attr.host;
 import static android.R.attr.port;
 
 public class TcpClient implements Runnable
@@ -156,10 +155,11 @@ public class TcpClient implements Runnable
         {
             initMembers();
         }
+        // Hacky way to get around our inability to throw an exception from run()
         catch (IOException exception)
         {
-            return;
-//            Log.e("ERROR CONNECTING TO SOCKET");
+            logMsg("IOException caught when initializing members of TcpClient. Error: " + exception.toString());
+            throw new RuntimeException(exception);
         }
         logMsg("entering run()");
         socketWriterThread.start();
